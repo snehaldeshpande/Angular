@@ -1,0 +1,95 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+
+@Component({
+  selector: 'app-dynamicform1',
+  templateUrl: './dynamicform1.component.html',
+  styleUrls: ['./dynamicform1.component.css']
+})
+export class Dynamicform1Component implements OnInit {
+
+  private frm: FormGroup;
+
+
+  constructor(private fb: FormBuilder) { }
+
+  ngOnInit() {
+
+    this.frm = this.fb.group({
+      first_name: [null, [Validators.required, Validators.minLength(2)]],
+      department: [null, [Validators.required]],
+      patients: this.fb.array([this.createpatientForm()])
+    })
+  }
+  addPatient() {
+    var controls = this.frm.get('patients') as FormArray;
+    var ln = controls.length;
+    if (ln < 10) {
+      controls.push(this.createpatientForm());
+    }
+  }
+  delpatientForm(index) {
+    var controls = this.frm.get("patients") as FormArray;
+    controls.removeAt(index);
+  }
+  createpatientForm() {
+    return this.fb.group({
+      patient_name: [null, [Validators.required]],
+      patient_disease: [null, [Validators.required]]
+    })
+  }
+  save() {
+    console.log(this.frm.value);
+  }
+}//dynamicform1.ts
+
+<div class="container">
+	<form [formGroup]="frm">
+		<div class="col-lg-12">
+			Name : <input class = "form-control" formControlName = "first_Name">
+			<p *ngIf="frm.get('first_Name').errors && frm.get('first_Name').touched">
+				<span *ngIf="frm.get('first_Name').errors['required']">Name Required</span>
+				<span *ngIf="frm.get('first_Name')"></span></p>
+		</div><br>
+
+		<div class="col-lg-12">
+			Department : <input class="form-control" formControlName="department">
+			<p *ngIf="frm.get('department').errors && frm.get('department').touched">
+				<span *ngIf="frm.get('department').errors['required']">Department Required</span>
+			</p>
+		</div>
+
+
+		<div class="col-lg-12">
+			<button (click)="addPatient()">[ + ]</button>
+		</div>
+		<hr>
+		<hr>
+
+		<div class="col-lg-12" formArrayName="patients">
+			<div *ngFor="let x of frm.get('patients').control;let i = index;">
+				<div [formGroupName]="i">
+
+					<div class="card">
+						<b>Patient #{{i+1}}</b>
+						<button (click)="delPatientForm(index)">[ - ]</button>
+
+
+						<div>
+							patient Name:<input class="form-control" formcontrolName="patient_name">
+							<br>
+							Patient Disease:<input class="form-control" formcontrolName="patient_disease">
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-12">
+					<button class="btn btn-primary" [disabled]="!frm.valid">Save</button>
+				</div>
+			</div>
+		</div>
+	</form> //dynamic.html
+  
+
+
+
