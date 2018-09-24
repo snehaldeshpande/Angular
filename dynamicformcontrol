@@ -1,6 +1,6 @@
 
  Dyanamic_Form_Control
- FormGroup class
+ FormGroup class is used
  
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
