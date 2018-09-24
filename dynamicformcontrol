@@ -93,6 +93,8 @@ export class Dynamicform1Component implements OnInit {
 			</div>
 		</div>
 	</form> //dynamic.html
+	
+	Done my changes
   
 
 
